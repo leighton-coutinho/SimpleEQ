@@ -21,14 +21,15 @@ public:
     ~SimpleEQAudioProcessor() override;
 
     //==============================================================================
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+    void prepareToPlay (double sampleRate, int samplesPerBlock) override; // CALLED WHEN ABOUT TO START PLAYBACK
     void releaseResources() override;
 
    #ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override; // WHEN PLAY BUTTON IS CLICKED (USE AUDIO BUFFERS WHICH ARE BEING SENT) 
+    // SHOULD NOT BE INTERUPTED WITH LATENCY
 
     //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
@@ -52,6 +53,9 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
 private:
     //==============================================================================
